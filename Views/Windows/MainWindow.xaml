@@ -1,0 +1,80 @@
+﻿<Window x:Class="ShopLabelGenerator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ShopLabelGenerator"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"      
+        xmlns:vm="clr-namespace:ShopLabelGenerator.ViewModels.Windows"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="Генератор этикеток" 
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="/icon.png" SizeToContent="WidthAndHeight">
+
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+
+    <StackPanel Width="420">
+        <materialDesign:Card Margin="5">
+            <StackPanel Margin="5">
+                <!--<DockPanel LastChildFill="True">
+
+                    <Button DockPanel.Dock="Right" Width="20" Margin="1" Height="20" Padding="0" Command="{Binding OpenBARCodeFileCommand}" Cursor="Hand">
+                        <materialDesign:PackIcon Kind="FileExcelOutline" Background="Green" Foreground="White" Width="20" Height="20"/>
+                    </Button>
+                    <TextBox x:Name="barcodePath" materialDesign:HintAssist.Hint="Таблица со штрих-кодами" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                    IsReadOnly="True" VerticalContentAlignment="Center" Text="{Binding BARCodesPath, UpdateSourceTrigger=PropertyChanged}" Cursor="Arrow"/>
+                </DockPanel>-->
+                <DockPanel LastChildFill="True">
+                    <Button DockPanel.Dock="Right" Width="20" Margin="1" Height="20" Padding="0" Command="{Binding OpenProductFileCommand}" Cursor="Hand">
+                        <materialDesign:PackIcon Kind="FileExcelOutline" Background="Green" Foreground="White" Width="20" Height="20"/>
+                    </Button>
+                    <TextBox x:Name="productTablePath" materialDesign:HintAssist.Hint="Таблица с товарами" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                    IsReadOnly="True" VerticalContentAlignment="Center" Text="{Binding ProductTablePath, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <DockPanel LastChildFill="True">
+                    <Button DockPanel.Dock="Right" Width="20" Margin="1" Height="20" Padding="0" Command="{Binding OpenQRCodesFileCommand}" Cursor="Hand">
+                        <materialDesign:PackIcon Kind="FilePdfBox" Background="DarkRed" Foreground="White" Width="20" Height="20"/>
+                    </Button>
+                    <TextBox x:Name="QRCodePath" materialDesign:HintAssist.Hint="Файл с QR-кодами" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                    IsReadOnly="True" VerticalContentAlignment="Center" Text="{Binding QRCodesPath, UpdateSourceTrigger=PropertyChanged}"/>
+                </DockPanel>
+                <TextBox x:Name="Desc" Margin="0 5" Text="{Binding Description}"
+                Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                VerticalAlignment="Top" Height="150" TextWrapping="Wrap" AcceptsReturn="True" HorizontalContentAlignment="Left"
+                VerticalScrollBarVisibility="Auto"
+                materialDesign:HintAssist.Hint="Описание" Cursor="Arrow"/>
+                <TextBlock Text="Размер шрифта"/>
+                <Slider Minimum="1" Maximum="100" Value="{Binding FontSize}" Margin="0 0 0 7"/>
+                <Grid>
+                    <Button IsEnabled="{Binding ElementName=Desc, Path=Text.Length}" HorizontalAlignment="Left" Padding="0" Width="35" Command="{Binding SaveDescriptionCommand}" Cursor="Hand">
+                        <materialDesign:PackIcon Kind="ContentSaveOutline" Foreground="White" Width="30" Height="30"/>
+                    </Button>
+
+                    <Button Content="Создать этикетки" Foreground="WhiteSmoke" Width="200"  Cursor="Hand"
+                        Command="{Binding CreateCommand}">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource IsEnabledConverter}">
+                                <Binding ElementName="barcodePath" Path="Text.Length" />
+                                <Binding ElementName="productTablePath" Path="Text.Length"  />
+                                <Binding ElementName="QRCodePath" Path="Text.Length"  />
+                                <Binding Path="IsNotWorking"/>
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
+                </Grid>
+
+            </StackPanel>
+        </materialDesign:Card>
+        <StatusBar>
+            <TextBlock Text="{Binding Status}"/>
+        </StatusBar>
+    </StackPanel>
+</Window>
