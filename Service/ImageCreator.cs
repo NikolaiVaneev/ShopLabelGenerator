@@ -2,7 +2,6 @@
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using ShopLabelGenerator.Models;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -14,7 +13,7 @@ namespace ShopLabelGenerator.Service
 {
     public static class ImageCreator
     {
-        
+
         static float Percent { get; set; } = 1.0f;
         private static Image CodeGenerate(string message)
         {
@@ -48,7 +47,7 @@ namespace ShopLabelGenerator.Service
 
                 // QR код
                 pic.DrawImage(product.QRCode.QRCodeImage, 20, 40, GetRangeInPercent(25f, w), GetRangeInPercent(25f, w));
-          
+
                 // Описание кода
                 StringFormat stringFormat = new StringFormat
                 {
@@ -89,7 +88,7 @@ namespace ShopLabelGenerator.Service
                 //Pen p = new Pen(Color.Black, 2);
                 //pic.DrawRectangle(p, rect);
                 font = new Font("Arial Regular", 9.0f * FontFizeKoef, FontStyle.Regular);
-                
+
                 pic.DrawString(note, font, new SolidBrush(Color.Black), rect, stringFormat);
                 pic.RotateTransform(90);
 
@@ -119,9 +118,9 @@ namespace ShopLabelGenerator.Service
                 //p = new Pen(Color.Black, 2);
                 //pic.DrawRectangle(p, rect);
                 pic.DrawString($"Размер: {product.Size}", font, new SolidBrush(Color.Black), rect, stringFormat);
-             
+
                 // Описание
-                rect = new Rectangle(580, 275, (int)GetRangeInPercent(25f, w), (int)GetRangeInPercent(35f, h));
+                rect = new Rectangle(580, 275, (int)GetRangeInPercent(25f, w), (int)GetRangeInPercent(40f, h));
                 // тест размещения прямоугльника
                 //Pen p = new Pen(Color.Black, 2);
                 //pic.DrawRectangle(p, rect);
@@ -129,8 +128,10 @@ namespace ShopLabelGenerator.Service
                 StringBuilder description = new StringBuilder();
                 description.AppendLine($"Цвет: {product.Color}");
                 description.AppendLine($"Верх: {product.TopMaterial}");
-                description.AppendLine($"Стелька: {product.Insole}");
+                description.AppendLine($"Подкладка: {product.Insole}");
                 description.AppendLine($"Подошва: {product.SoleMaterial}");
+                description.AppendLine("");
+                description.AppendLine($"Дата производства: {product.ProductionDate}");
 
                 font = new Font("Arial Regular", 15.0f * FontFizeKoef, FontStyle.Regular);
 

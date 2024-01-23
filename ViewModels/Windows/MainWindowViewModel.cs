@@ -208,7 +208,7 @@ namespace ShopLabelGenerator.ViewModels.Windows
                 // Присвоение QR кодов
                 foreach (var product in products)
                 {
-                    var qr = QRCodes.Where(u => u.Art.Contains(product.Name) && u.Size == product.Size && !u.IsUsing).FirstOrDefault();
+                    var qr = QRCodes.Where(u => u.Art.Contains(product.VendorCode) && u.Size == product.Size && !u.IsUsing).FirstOrDefault();
                     //var qr = QRCodes.Where(u => u.Size == product.Size && !u.IsUsing).FirstOrDefault();
 
                     if (qr != null)
@@ -228,18 +228,20 @@ namespace ShopLabelGenerator.ViewModels.Windows
                         product.QRCode = qr;
                         qr.IsUsing = true;
                     }
-
+                    else
+                    {
+                        Status = "Ошибка сопоставления данных";
+                        return;
+                    }
                     // Присвоение бар-кодов
-                    var bar = barcodes.Where(x => x.Size == product.Size && x.VendorCode == product.Name).FirstOrDefault();
+                    var bar = barcodes.Where(x => x.Size == product.Size && x.VendorCode == product.VendorCode).FirstOrDefault();
                     if (bar != null)
                     {
                         product.BARCode = bar.BARCode;
                     }
-
-
                     else
                     {
-                        Status = "Ошибка сопоставления данных";
+                        Status = "Ошибка сопоставления данных (штрих-код)";
                         return;
                     }
                 }
@@ -247,7 +249,6 @@ namespace ShopLabelGenerator.ViewModels.Windows
                 Status = "Формирование этикеток";
 
                 var pdfDocument = ImageCreator.CreateStickers(products, Description, 105, 37, QRCodes, FontSize);
-
 
                 SaveFileDialog sd = new SaveFileDialog
                 {

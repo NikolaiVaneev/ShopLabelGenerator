@@ -83,7 +83,7 @@ namespace ShopLabelGenerator.Service
 
                     // Извлекаем размеры
                     List<string> _sizes = new List<string>();
-                    for (int i = 9; i < tableColumnsCount - 1; i++)
+                    for (int i = 10; i < tableColumnsCount - 1; i++)
                     {
                         _sizes.Add(dataTable.Rows[0][i].ToString());
                     }
@@ -92,7 +92,7 @@ namespace ShopLabelGenerator.Service
                     for (var i = 1; i < tableRowsCount - 1; i++)
                     {
                         // получаем данные о наличии размеров
-                        for (int j = 9; j < tableColumnsCount - 1; j++)
+                        for (int j = 10; j < tableColumnsCount - 1; j++)
                         {
                             if (string.IsNullOrWhiteSpace(dataTable.Rows[i][j].ToString())){
                                 continue;
@@ -103,14 +103,16 @@ namespace ShopLabelGenerator.Service
                             {
                                 var product = new Product
                                 {
-                                    Name = dataTable.Rows[i][2].ToString(),
-                                    VendorCode = dataTable.Rows[i][3].ToString(),
-                                    TopMaterial = dataTable.Rows[i][4].ToString(),
-                                    Insole = dataTable.Rows[i][5].ToString(),
-                                    SoleMaterial = dataTable.Rows[i][6].ToString(),
-                                    Color = dataTable.Rows[i][7].ToString(),
-                                    Type = dataTable.Rows[i][8].ToString(),
-                                    Size = _sizes[j - 9]
+                                    VendorCode = dataTable.Rows[i][2].ToString(),
+                                    Name = dataTable.Rows[i][3].ToString(),
+                                    Type = dataTable.Rows[i][4].ToString(),
+                                    Color = dataTable.Rows[i][5].ToString(),
+                                    TopMaterial = dataTable.Rows[i][6].ToString(),
+                                    Insole = dataTable.Rows[i][7].ToString(),
+                                    SoleMaterial = dataTable.Rows[i][8].ToString(),
+                                    ProductionDate = dataTable.Rows[i][9].ToString(),
+                                    Size = _sizes[j - 10],
+                                    
                                 };
                                 // Получаем штрих-код
                                 var code = barCodes.Where(u => u.VendorCode == product.VendorCode && u.Size == product.Size).FirstOrDefault();

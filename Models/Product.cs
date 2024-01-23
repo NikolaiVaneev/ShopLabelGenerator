@@ -31,13 +31,17 @@
         /// </summary>
         public string TopMaterial { get; set; }
         /// <summary>
-        /// Cтелькa
+        /// Cтелькa (материал подкладки)
         /// </summary>
         public string Insole { get; set; }
         /// <summary>
         /// Материал подошвы
         /// </summary>
         public string SoleMaterial { get; set; }
+        /// <summary>
+        /// Дата производства
+        /// </summary>
+        public string ProductionDate { get; set; } = string.Empty;
         /// <summary>
         /// QR-код
         /// </summary>
