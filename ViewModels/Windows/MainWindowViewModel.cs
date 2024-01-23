@@ -205,34 +205,44 @@ namespace ShopLabelGenerator.ViewModels.Windows
                     return;
                 }
 
-                //// Присвоение QR кодов
-                //foreach (var product in products)
-                //{
-                //    var qr = QRCodes.Where(u => u.Model.Contains(product.Name) && u.Size == product.Size && !u.IsUsing).FirstOrDefault();
-                    
-                //    if (qr != null)
-                //    {
-                //        //QRCode qrcode = new QRCode
-                //        //{
-                //        //    Id = qr.Id,
-                //        //    QRCodeImage = qr.QRCodeImage,
-                //        //    QRBottomPart = qr.QRBottomPart,
-                //        //    QRTopPart = qr.QRTopPart,
-                //        //    Art = qr.Art,
-                //        //    Model = qr.Model,
-                //        //    Color = qr.Color,
-                //        //    Size = qr.Size
-                //        //};
+                // Присвоение QR кодов
+                foreach (var product in products)
+                {
+                    var qr = QRCodes.Where(u => u.Art.Contains(product.Name) && u.Size == product.Size && !u.IsUsing).FirstOrDefault();
+                    //var qr = QRCodes.Where(u => u.Size == product.Size && !u.IsUsing).FirstOrDefault();
 
-                //        product.QRCode = qr;
-                //        qr.IsUsing = true;
-                //    }
-                //    else
-                //    {
-                //        Status = "Ошибка сопоставления данных";
-                //        return;
-                //    }
-                //}
+                    if (qr != null)
+                    {
+                        QRCode qrcode = new QRCode
+                        {
+                            Id = qr.Id,
+                            QRCodeImage = qr.QRCodeImage,
+                            QRBottomPart = qr.QRBottomPart,
+                            QRTopPart = qr.QRTopPart,
+                            Art = qr.Art,
+                            Model = qr.Model,
+                            Color = qr.Color,
+                            Size = qr.Size
+                        };
+
+                        product.QRCode = qr;
+                        qr.IsUsing = true;
+                    }
+
+                    // Присвоение бар-кодов
+                    var bar = barcodes.Where(x => x.Size == product.Size && x.VendorCode == product.Name).FirstOrDefault();
+                    if (bar != null)
+                    {
+                        product.BARCode = bar.BARCode;
+                    }
+
+
+                    else
+                    {
+                        Status = "Ошибка сопоставления данных";
+                        return;
+                    }
+                }
 
                 Status = "Формирование этикеток";
 

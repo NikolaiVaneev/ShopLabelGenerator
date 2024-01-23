@@ -44,7 +44,8 @@ namespace ShopLabelGenerator.Service
                         {
                             BARCode = dataTable.Rows[i][0].ToString(),
                             VendorCode = dataTable.Rows[i][1].ToString(),
-                            Size = new string(dataTable.Rows[i][2].ToString().Where(char.IsDigit).ToArray())
+                            Size = new string(dataTable.Rows[i][3].ToString().Where(char.IsDigit).ToArray()),
+                            Count = Convert.ToInt32(dataTable.Rows[i][4])
                         });
                     }
                 }
@@ -82,7 +83,7 @@ namespace ShopLabelGenerator.Service
 
                     // Извлекаем размеры
                     List<string> _sizes = new List<string>();
-                    for (int i = 9; i < tableColumnsCount - 2; i++)
+                    for (int i = 9; i < tableColumnsCount - 1; i++)
                     {
                         _sizes.Add(dataTable.Rows[0][i].ToString());
                     }
@@ -91,7 +92,7 @@ namespace ShopLabelGenerator.Service
                     for (var i = 1; i < tableRowsCount - 1; i++)
                     {
                         // получаем данные о наличии размеров
-                        for (int j = 9; j < tableColumnsCount - 2; j++)
+                        for (int j = 9; j < tableColumnsCount - 1; j++)
                         {
                             if (string.IsNullOrWhiteSpace(dataTable.Rows[i][j].ToString())){
                                 continue;
@@ -100,7 +101,7 @@ namespace ShopLabelGenerator.Service
                             // если есть, то добавляем
                             if (sizeCount > 0)
                             {
-                                var product = new Product()
+                                var product = new Product
                                 {
                                     Name = dataTable.Rows[i][2].ToString(),
                                     VendorCode = dataTable.Rows[i][3].ToString(),
@@ -108,11 +109,9 @@ namespace ShopLabelGenerator.Service
                                     Insole = dataTable.Rows[i][5].ToString(),
                                     SoleMaterial = dataTable.Rows[i][6].ToString(),
                                     Color = dataTable.Rows[i][7].ToString(),
-                                    Type = dataTable.Rows[i][8].ToString()
-                                    // Size = new string(dataTable.Rows[i][2].ToString().Where(char.IsDigit).ToArray())
+                                    Type = dataTable.Rows[i][8].ToString(),
+                                    Size = _sizes[j - 9]
                                 };
-
-                                product.Size = _sizes[j - 9];
                                 // Получаем штрих-код
                                 var code = barCodes.Where(u => u.VendorCode == product.VendorCode && u.Size == product.Size).FirstOrDefault();
                                 if (code != null)

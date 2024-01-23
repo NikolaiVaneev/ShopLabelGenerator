@@ -244,9 +244,6 @@ namespace ShopLabelGenerator.Service
             }
 
             return doc;
-            //doc.Save("D:\\test.pdf");
-            //doc.Close();
-            //doc.Dispose();
         }
         static private float GetRangeInPercent(float percent, int x)
         {

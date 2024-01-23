@@ -120,8 +120,6 @@ namespace ShopLabelGenerator.Service
                     
                     for (int i = 0; i < QRCodesFromPage; i++)
                     {
-                        
-
                         QRCode qRCodeDesc = new QRCode
                         {
                             Id = ++counter,
