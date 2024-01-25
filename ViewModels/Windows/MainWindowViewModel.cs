@@ -193,7 +193,8 @@ namespace ShopLabelGenerator.ViewModels.Windows
                 // Считывание данных по товарам
                 Status = "Считывание данных по товарам";
                 List<Product> products = ExcelWorker.GetProductsData(ProductTablePath, barcodes).ToList();
-    
+                List<Product> prod = new List<Product>();
+
                 // Извлекаем QR-коды и текстовое описание
                 Status = "Извлечение QR-кодов и текстовых описаний";
                 var QRCodes = PDF.ExtractImagesFromPDF(QRCodesPath);
@@ -205,27 +206,20 @@ namespace ShopLabelGenerator.ViewModels.Windows
                     return;
                 }
 
+
                 // Присвоение QR кодов
                 foreach (var product in products)
                 {
                     var qr = QRCodes.Where(u => u.Art.Contains(product.VendorCode) && u.Size == product.Size && !u.IsUsing).FirstOrDefault();
-                    //var qr = QRCodes.Where(u => u.Size == product.Size && !u.IsUsing).FirstOrDefault();
 
                     if (qr != null)
                     {
-                        QRCode qrcode = new QRCode
+                        product.QRCode = new QRCode()
                         {
-                            Id = qr.Id,
                             QRCodeImage = qr.QRCodeImage,
                             QRBottomPart = qr.QRBottomPart,
-                            QRTopPart = qr.QRTopPart,
-                            Art = qr.Art,
-                            Model = qr.Model,
-                            Color = qr.Color,
-                            Size = qr.Size
+                            QRTopPart = qr.QRTopPart
                         };
-
-                        product.QRCode = qr;
                         qr.IsUsing = true;
                     }
                     else
@@ -244,11 +238,26 @@ namespace ShopLabelGenerator.ViewModels.Windows
                         Status = "Ошибка сопоставления данных (штрих-код)";
                         return;
                     }
+
+                    prod.Add(new Product()
+                    {
+                        Type = product.Type,
+                        Size = product.Size,
+                        VendorCode = product.VendorCode,
+                        Color = product.Color,
+                        Insole = product.Insole,
+                        ProductionDate = product.ProductionDate,
+                        SoleMaterial = product.SoleMaterial,
+                        Name = product.Name,
+                        TopMaterial = product.TopMaterial,
+                        QRCode = qr,
+                        BARCode = bar.BARCode
+                    });
                 }
 
                 Status = "Формирование этикеток";
 
-                var pdfDocument = ImageCreator.CreateStickers(products, Description, 105, 37, QRCodes, FontSize);
+                var pdfDocument = ImageCreator.CreateStickers(prod, Description, 105, 37, QRCodes, FontSize);
 
                 SaveFileDialog sd = new SaveFileDialog
                 {
